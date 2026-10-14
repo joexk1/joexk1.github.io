@@ -107,7 +107,7 @@
       if (e.pointerType !== 'mouse') return;
       tx = e.clientX; ty = e.clientY; c.classList.remove('hide'); dot.classList.remove('hide');
       const el = e.target.closest ? e.target : null;
-      const card = el && el.closest('.card, .macwin, .nn, .phone, .shot');
+      const card = el && el.closest('.card, .macwin, .nn, .phone, .mcard');
       const link = el && el.closest('a, button, .sphere, .ball, canvas');
       c.classList.toggle('glass-c', !!card); c.classList.toggle('link', !card && !!link);
       ask(step);
@@ -227,8 +227,8 @@
   const macwin = d.querySelector('.macwin');
   if (macwin) new IntersectionObserver(es => { macVisible = es[0].isIntersecting; if (macVisible && d.querySelector('#tab-memory[aria-selected="true"]') && mdPre.textContent.length < mdText.length) typeMd(); }).observe(macwin);
   const themeImg = d.querySelector('.theme-img');
-  const THEME = { blue: 5, purple: 2, ocean: 4, forest: 1, sunset: 3, graphite: 6 };
-  const setTheme = () => { if (!themeImg) return; const n = THEME[root.dataset.accent || 'blue']; const src = `assets/w/theme-${n}.webp`; if (themeImg.getAttribute('src') === src) return;
+  const THEME = { blue: '05_theming', purple: '01_workspace', ocean: '02_theme', forest: '04_git_mcp', sunset: '03_theme', graphite: '05_agent_actions' };
+  const setTheme = () => { if (!themeImg) return; const n = THEME[root.dataset.accent || 'blue']; const src = `assets/w/win_${n}.webp`; if (themeImg.getAttribute('src') === src) return;
     themeImg.classList.add('swap'); setTimeout(() => { themeImg.src = src; themeImg.onload = () => themeImg.classList.remove('swap'); }, reduce ? 0 : 200); };
   W.addEventListener('jb:accent', setTheme); setTheme();
 

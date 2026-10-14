@@ -20,12 +20,12 @@ else start();
 function start() {
   const small = innerWidth < 700;
   const SPEED = small ? .8 : 1;              /* shorter intro on phones */
-  const T_SWEEP = 1.0 * SPEED, T_TITLE = 1.2 * SPEED, T_FLY = 2.2 * SPEED, FLY_MS = small ? 700 : 900;
+  const T_SWEEP = small ? .7 : 1.0, T_TITLE = small ? 99 : 1.2, T_FLY = small ? 1.4 : 2.2, FLY_MS = small ? 650 : 900;
   let gl = null, mode = playIntro ? 'wait' : 'live', t0 = 0, flyStart = 0, visible = true, overlay = null, title = null;
   let px = 0, py = 0, spin = 0, spinV = 0, running = false;
 
   const introSize = () => Math.min(innerWidth * .8, innerHeight * .56);
-  const introBox = () => ({ cx: innerWidth / 2, cy: innerHeight * (small ? .38 : .4), s: introSize() });
+  const introBox = () => ({ cx: innerWidth / 2, cy: innerHeight * (small ? .46 : .4), s: introSize() });
   const slotBox = () => { const r = slot.getBoundingClientRect(); return { cx: r.left + r.width / 2, cy: r.top + r.height / 2, s: r.width }; };
   let S = 0;
   const sizeGL = () => { if (gl) gl.resize(Math.round(stage.getBoundingClientRect().width / (mode === 'live' ? 1 : (stage._scale || 1)))); };
@@ -36,7 +36,7 @@ function start() {
     const words = [...h1.querySelectorAll('.w')].map((w, i) => `<span class="w" style="--i:${i}">${w.innerHTML}</span>`).join(' ');
     overlay = d.createElement('div'); overlay.className = 'intro'; overlay.setAttribute('aria-hidden', 'true');
     overlay.innerHTML = '<div class="wall"><i class="b1"></i><i class="b2"></i><i class="b4"></i></div><div class="glasspane glass"></div><div class="sweepband"></div>' +
-      `<p class="intro-title">${words}<span class="sphere"></span></p><button class="intro-skip" type="button">Skip intro</button>`;
+      (small ? '' : `<p class="intro-title">${words}<span class="sphere"></span></p>`) + '<button class="intro-skip" type="button">Skip intro</button>';
     d.body.appendChild(overlay); title = overlay.querySelector('.intro-title');
     S = Math.round(introSize()); stage.style.setProperty('--S', S + 'px');
     d.body.appendChild(stage); stage.classList.add('fly');
@@ -85,7 +85,7 @@ function start() {
     else if (mode === 'intro') {
       const t = (now - t0) / 1000; intro = t / SPEED; busy = true;
       if (t > T_SWEEP && !overlay.classList.contains('sweep')) overlay.classList.add('sweep');
-      if (t > T_TITLE && !title.classList.contains('go')) title.classList.add('go');
+      if (title && t > T_TITLE && !title.classList.contains('go')) title.classList.add('go');
       place(introBox());
       if (t > T_FLY) { mode = 'fly'; flyStart = now; overlay.classList.add('out'); root.classList.remove('intro-on'); setTimeout(go, 120); try { sessionStorage.setItem('jb-intro', '1'); } catch (e) {} }
     } else if (mode === 'fly') {
@@ -139,7 +139,7 @@ function start() {
     const pivot = new THREE.Group(); pivot.add(model); pivot.scale.setScalar(scale);
     const holder = new THREE.Group(); holder.add(pivot); scene.add(holder);
     let dot = null; model.traverse(o => { if (!dot && o !== model && /dot/i.test(o.name || '')) dot = o; });
-    const dotHome = dot ? dot.position.clone() : null, dotDrop = size.y * 1.1;
+    const dotHome = dot ? dot.position.clone() : null, dotDrop = size.y * .32;
 
     let hopT = -9, envTimer = 0, rx = 0, ry = 0;
     return {
@@ -151,14 +151,14 @@ function start() {
         if (s.intro !== null) {
           const t = s.intro, a = easeOut(clamp(t / 1.25));
           z = lerp(-34, 0, a); ry = lerp(-Math.PI * 5, 0, a); rx = lerp(1.3, 0, a); holder.rotation.z = lerp(.6, 0, a);
-          if (dot) { const k = clamp((t - .95) / .7); dotY = k <= 0 ? dotDrop * 3 : (1 - bounce(k)) * dotDrop; dot.visible = k > 0; }
+          if (dot) { const k = clamp((t - .95) / .7); dotY = (1 - bounce(k)) * dotDrop; dot.visible = k > 0; dot.scale.setScalar(clamp(k * 3.5)); }
           const sw = clamp((t - 1.05) / .85); sweep.position.x = lerp(-4.5, 4.5, easeInOut(sw)); sweepI = Math.sin(sw * Math.PI) * 60;
           anim = true;
         } else {
-          if (dot) dot.visible = true;
+          if (dot) { dot.visible = true; dot.scale.setScalar(1); }
           if (Math.abs(holder.rotation.z) > 1e-3) { holder.rotation.z *= .85; anim = true; } else holder.rotation.z = 0;
           const h = time - hopT;
-          if (h < 1.1 && dot) { dotY = Math.sin(clamp(h / .55) * Math.PI) * dotDrop * .35 + (h > .55 ? (1 - bounce(clamp((h - .55) / .55))) * dotDrop * .08 : 0); anim = true; }
+          if (h < 1.1 && dot) { dotY = Math.sin(clamp(h / .55) * Math.PI) * dotDrop * 1.1 + (h > .55 ? (1 - bounce(clamp((h - .55) / .55))) * dotDrop * .25 : 0); anim = true; }
           const ty = (fine ? s.px * .55 : 0) + s.spin, tx = fine ? s.py * .28 : 0;
           ry += (ty - ry) * .12; rx += (tx - rx) * .12;
           if (Math.abs(ty - ry) + Math.abs(tx - rx) > 1e-3) anim = true;

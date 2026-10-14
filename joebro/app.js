@@ -25,13 +25,16 @@
     btn.addEventListener('click', e => { e.stopPropagation(); btn.setAttribute('aria-expanded', pick.classList.toggle('open')); });
     d.addEventListener('click', e => { if (!pick.contains(e.target)) close(); });
     d.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
-    pick.querySelectorAll('[data-set-accent]').forEach(b => b.addEventListener('click', () => {
+  }
+  {
+    d.querySelectorAll('[data-set-accent]').forEach(b => b.addEventListener('click', () => {
       const v = b.dataset.setAccent;
       if (v === 'blue') delete root.dataset.accent; else root.dataset.accent = v;
       store.set('jb-accent', v); setChecked();
       W.dispatchEvent(new CustomEvent('jb:accent'));
       if (!reduce) d.querySelectorAll('.mega .sphere, .bighead .sphere, .cardhead .sphere').forEach(boing);
       dots && dots.recolor();
+      if (pick) pick.classList.remove('open');
     }));
     setChecked();
   }
@@ -48,11 +51,11 @@
     const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px', threshold: .06 });
     const add = (el, n) => { el.classList.add('rv'); el.style.setProperty('--d', n); io.observe(el); };
     d.querySelectorAll('.strip > *, .points > *, .topo > *').forEach((el, n) => add(el, n % 4));
-    d.querySelectorAll('.block-head > :not(h2), .feat-copy, .feat-shot, .chips, #privacy .note, .related.center').forEach(el => add(el, 0));
+    d.querySelectorAll('.block-head > :not(h2), .mac, .net, .cloak, .chips, #privacy .note, .related.center').forEach(el => add(el, 0));
     d.querySelectorAll('.cards').forEach(g => [...g.children].forEach((c, j) => add(c, j % 3)));
     d.querySelectorAll('.article-head > *').forEach((el, n) => add(el, n));
     d.querySelectorAll('.prose > figure, .prose > .note, .prose > .repo-box, .toc, .next-note > *').forEach(el => add(el, 0));
-    d.querySelectorAll('.bighead, .cardhead').forEach(h => {
+    d.querySelectorAll('.bighead').forEach(h => {
       const sph = h.querySelector('.sphere'); const t = h.textContent.trim();
       h.setAttribute('aria-label', t);
       h.innerHTML = t.split(' ').map((x, i) => `<span class="kw" aria-hidden="true" style="--i:${i}">${x.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</span>`).join(' ');
@@ -63,14 +66,14 @@
 
   /* ---------- pointer: coalesced to one rAF ---------- */
   let pe = null;
-  const tiltSel = '.card, .feat-shot, .nn';
+  const tiltSel = '.card, .macwin, .nn';
   function onPointer() {
     const e = pe; if (!e) return;
     const g = e.target.closest && e.target.closest('.glass, .card, .nn');
     if (g) { const r = g.getBoundingClientRect(); g.style.setProperty('--mx', (e.clientX - r.left) + 'px'); g.style.setProperty('--my', (e.clientY - r.top) + 'px'); }
     if (reduce || e.pointerType !== 'mouse') return;
     const t = e.target.closest && e.target.closest(tiltSel);
-    if (t) { const r = t.getBoundingClientRect(); const k = t.classList.contains('feat-shot') ? 5 : 4;
+    if (t) { const r = t.getBoundingClientRect(); const k = t.classList.contains('macwin') ? 3 : 4;
       t.style.setProperty('--tilt-x', (((e.clientX - r.left) / r.width - .5) * k).toFixed(2));
       t.style.setProperty('--tilt-y', (-((e.clientY - r.top) / r.height - .5) * k).toFixed(2)); }
   }
@@ -104,7 +107,7 @@
       if (e.pointerType !== 'mouse') return;
       tx = e.clientX; ty = e.clientY; c.classList.remove('hide'); dot.classList.remove('hide');
       const el = e.target.closest ? e.target : null;
-      const card = el && el.closest('.card, .feat-shot, .nn, .phone, .shot');
+      const card = el && el.closest('.card, .macwin, .nn, .phone, .shot');
       const link = el && el.closest('a, button, .sphere, .ball, canvas');
       c.classList.toggle('glass-c', !!card); c.classList.toggle('link', !card && !!link);
       ask(step);
@@ -154,8 +157,7 @@
   /* ---------- scroll: progress, stack scrub, blob parallax, marquee velocity (all coalesced) ---------- */
   const prog = d.querySelector('.progress'), article = d.querySelector('.prose');
   const stack = d.querySelector('.stack'), blobs = d.querySelectorAll('.wall > i');
-  const mqRows = d.querySelectorAll('.mq-row'), marquee = d.querySelector('.marquee');
-  let lastY = scrollY, vel = 0, mqOff = 0, mqVisible = false;
+  const drum = d.querySelector('.drum'), dws = d.querySelectorAll('.dw'), ticks = d.querySelectorAll('.drum-ticks i');
   const ss = (a, b, x) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
   const pinned = () => root.classList.contains('motion') && innerWidth >= 900;
   function onScroll() {
@@ -174,25 +176,75 @@
       }
     }
     if (!reduce) blobs.forEach((b, i) => b.style.setProperty('--sy', (-y * (.04 + i * .025)).toFixed(1) + 'px'));
-    vel = vel * .6 + (y - lastY) * .4; lastY = y;
-    if (mqVisible && !reduce) ask(mqStep);
-  }
-  function mqStep() {
-    vel *= .9; mqOff += vel * .3;
-    mqRows.forEach((r, i) => r.style.transform = `translateX(${((i ? -1 : 1) * mqOff).toFixed(1)}px) skewX(${clamp(-vel * .2, -8, 8).toFixed(2)}deg)`);
-    if (Math.abs(vel) > .05) ask(mqStep);
+    if (drum && !reduce) {
+      const r = drum.getBoundingClientRect();
+      if (r.top < innerHeight && r.bottom > 0) {
+        const p = clamp(-r.top / (r.height - innerHeight)), n = dws.length;
+        const idx = clamp(p * 1.25 * (n - 1), 0, n - 1);
+        dws.forEach((w, i) => { const o = i - idx, a = Math.abs(o);
+          w.style.transform = `rotateX(${(o * -78).toFixed(2)}deg)`; w.style.opacity = clamp(1 - a * 1.25).toFixed(3); });
+        ticks.forEach((t, i) => t.style.setProperty('--f', clamp(idx - i + 1).toFixed(3)));
+        drum.style.setProperty('--foot', ss(.8, .95, p).toFixed(3));
+      }
+    }
   }
   W.addEventListener('scroll', () => ask(onScroll), { passive: true });
   W.addEventListener('resize', () => ask(onScroll)); onScroll();
   /* pause looping CSS animations while offscreen */
-  const vis = new IntersectionObserver(es => es.forEach(e => { e.target.classList.toggle('off', !e.isIntersecting); if (e.target === marquee) mqVisible = e.isIntersecting; }));
-  d.querySelectorAll('.marquee, .topo').forEach(el => vis.observe(el));
+  const vis = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('off', !e.isIntersecting)));
+  d.querySelectorAll('.net').forEach(el => vis.observe(el));
 
   const toc = [...d.querySelectorAll('.toc a[href^="#"]')];
   if (toc.length) {
     const map = new Map(toc.map(a => [d.getElementById(a.getAttribute('href').slice(1)), a]));
     const tio = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { toc.forEach(a => a.classList.remove('on')); map.get(e.target)?.classList.add('on'); } }), { rootMargin: '-20% 0px -70% 0px' });
     map.forEach((a, h) => h && tio.observe(h));
+  }
+
+
+  /* ---------- features: Mac window tabs, typing memory file, theme swap ---------- */
+  const tabs = [...d.querySelectorAll('.ftab')];
+  const mdPre = d.querySelector('.md-type'), mdText = mdPre ? mdPre.dataset.text : '';
+  let typer = 0, macVisible = false;
+  const typeMd = () => {
+    clearTimeout(typer); if (!mdPre) return;
+    if (reduce) { mdPre.textContent = mdText; return; }
+    let i = 0; mdPre.textContent = '';
+    const tick = () => { if (!macVisible) return; i = Math.min(mdText.length, i + 1 + (Math.random() < .3 ? 1 : 0)); mdPre.textContent = mdText.slice(0, i); if (i < mdText.length) typer = setTimeout(tick, mdText[i] === '\n' ? 160 : 26); };
+    typer = setTimeout(tick, 350);
+  };
+  function selectTab(t, focus) {
+    const key = t.id.replace('tab-', '');
+    tabs.forEach(x => { const on = x === t; x.setAttribute('aria-selected', on); x.tabIndex = on ? 0 : -1; d.getElementById(x.getAttribute('aria-controls')).classList.toggle('on', on); });
+    d.querySelectorAll('.fdesc').forEach(f => f.hidden = f.dataset.for !== key);
+    if (focus) t.focus();
+    if (key === 'memory') typeMd(); else clearTimeout(typer);
+  }
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => selectTab(t));
+    t.addEventListener('keydown', e => { const k = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key]; if (k) { e.preventDefault(); selectTab(tabs[(i + k + tabs.length) % tabs.length], true); } });
+  });
+  const macwin = d.querySelector('.macwin');
+  if (macwin) new IntersectionObserver(es => { macVisible = es[0].isIntersecting; if (macVisible && d.querySelector('#tab-memory[aria-selected="true"]') && mdPre.textContent.length < mdText.length) typeMd(); }).observe(macwin);
+  const themeImg = d.querySelector('.theme-img');
+  const THEME = { blue: 5, purple: 2, ocean: 4, forest: 1, sunset: 3, graphite: 6 };
+  const setTheme = () => { if (!themeImg) return; const n = THEME[root.dataset.accent || 'blue']; const src = `assets/w/theme-${n}.webp`; if (themeImg.getAttribute('src') === src) return;
+    themeImg.classList.add('swap'); setTimeout(() => { themeImg.src = src; themeImg.onload = () => themeImg.classList.remove('swap'); }, reduce ? 0 : 200); };
+  W.addEventListener('jb:accent', setTheme); setTheme();
+
+  /* ---------- privacy: Cloak Mode demo ---------- */
+  const cloak = d.querySelector('.cloak');
+  if (cloak) {
+    const tog = cloak.querySelector('.cloak-toggle');
+    const set = on => { cloak.classList.toggle('cloaked', on); tog.setAttribute('aria-pressed', on); if (on && !reduce) { cloak.classList.remove('scanning'); void cloak.offsetWidth; cloak.classList.add('scanning'); } };
+    if (reduce) set(true);
+    else new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { o.disconnect(); setTimeout(() => set(true), 700); } }, { threshold: .5 }).observe(cloak);
+    tog.addEventListener('click', () => set(!cloak.classList.contains('cloaked')));
+    cloak.querySelectorAll('[data-k]').forEach(el => {
+      const mates = () => cloak.querySelectorAll(`[data-k="${el.dataset.k}"]`);
+      el.addEventListener('pointerenter', () => mates().forEach(m => m.classList.add('hot')));
+      el.addEventListener('pointerleave', () => mates().forEach(m => m.classList.remove('hot')));
+    });
   }
 
   /* ---------- article filters (same-document view transition when available) ---------- */

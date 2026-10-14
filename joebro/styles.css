@@ -581,3 +581,11 @@ html.party .card { animation: wobble .8s var(--spring) both; animation-delay: ca
   .sphere::after, .packet, .net-cloud { animation: none !important; }
   ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
 }
+.net-cloud .mono, .net-node b { white-space: nowrap; }
+@media (max-width: 699px) {
+  .net { aspect-ratio: 4 / 3.2; margin-bottom: 34px; }
+  .net-node span { display: none; }
+  .net-node { padding: 10px 16px; }
+  .n-pi { top: 90%; padding: 6px 12px; }
+  .net-label { top: 106%; }
+}

@@ -341,7 +341,7 @@ html.motion .drum-foot { opacity: var(--foot, 0); transform: translateY(calc((1 
 .net.off .packet, .net.off .net-cloud, .net.off .shield { animation-play-state: paused; }
 @media (max-width: 699px) {
   .net-in { aspect-ratio: 4 / 4.2; }
-  .d-phone { left: 22%; } .d-mac { left: 78%; } .d-pi { left: 78%; top: 76%; }
+  .d-phone { left: 22%; top: 48%; } .d-mac { left: 78%; top: 48%; } .d-pi { left: 78%; top: 82%; }
   .dev span { display: none; }
   .net-chip { top: 93%; white-space: normal; text-align: center; width: 86%; }
 }

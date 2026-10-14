@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://joexk1.github.io/joebro/sitemap.xml

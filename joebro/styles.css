@@ -225,6 +225,7 @@ h3 { font: 700 1.22rem/1.2 var(--font); letter-spacing: -.02em; margin: 0 0 8px;
 .dw.g3 { background-image: linear-gradient(100deg, #9B6BF2, #F07AB8); }
 .dw.g4 { background-image: linear-gradient(100deg, #2F8FD8, #34C3B5); }
 .dw.g5 { background-image: linear-gradient(100deg, #F07A4F, #F06292); }
+.dw.g6 { background-image: linear-gradient(100deg, #34C3B5, #619EFA 60%, #9B6BF2); }
 .drum-foot { margin: 0; display: inline-flex; align-items: center; gap: 10px; font: 500 clamp(.95rem, 1.6vw, 1.15rem)/1 var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .14em; }
 .drum-foot .sphere { font-size: 34px; margin: 0; }
 .drum-ticks { display: flex; gap: 8px; }
@@ -233,10 +234,10 @@ h3 { font: 700 1.22rem/1.2 var(--font); letter-spacing: -.02em; margin: 0 0 8px;
 /* static (no-JS / reduced motion): stacked list */
 html:not(.motion) .drum-words { display: flex; flex-direction: column; }
 html:not(.motion) .drum-line { flex-direction: column; align-items: center; white-space: normal; font-size: clamp(2.6rem, 9vw, 6rem); }
-html.motion .drum { height: 260vh; }
+html.motion .drum { height: 310vh; }
 html.motion .drum-pin { position: sticky; top: 0; height: 100vh; height: 100svh; padding: 0; }
 html.motion .drum-foot { opacity: var(--foot, 0); transform: translateY(calc((1 - var(--foot, 0)) * 16px)); }
-@media (max-width: 699px) { html.motion .drum { height: 190vh; } .drum-line { font-size: clamp(3rem, 15vw, 5rem); } }
+@media (max-width: 699px) { html.motion .drum { height: 225vh; } .drum-line { font-size: clamp(3rem, 15vw, 5rem); } }
 
 /* ---------- interactive Mac window (features) ---------- */
 .mac { display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; align-items: start; }

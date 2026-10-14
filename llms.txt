@@ -1,0 +1,27 @@
+# JoeBro Field Notes
+
+First-hand product notes by Joe, creator of JoeBro. AI tools assisted with drafting. The drafts were checked against the repository documentation.
+
+## Articles
+- [A sovereign AI assistant on Mac and iPhone: what stays local, and what does not](https://joexk1.github.io/joebro-field-notes/sovereign-ai-mac-iphone/): An honest map of JoeBro’s local Mac workspace, model-provider boundary, iPhone pairing requirements, and the limits of its documented setup.
+- [Local Ollama or hosted AI API? Choosing a model endpoint for JoeBro](https://joexk1.github.io/joebro-field-notes/local-ollama-versus-hosted-api/): A practical privacy guide to deciding where JoeBro sends prompts, how BYO API keys work, and what local inference does and does not protect.
+- [What JoeBro Cloak Mode redacts, and what it cannot promise](https://joexk1.github.io/joebro-field-notes/cloak-mode-sensitive-data/): Understand JoeBro's default sensitive-value masking, its endpoint coverage, and why redaction is a useful guardrail rather than a privacy guarantee.
+- [Email and calendar with an AI assistant: keep the boundary visible](https://joexk1.github.io/joebro-field-notes/email-calendar-ai-privacy/): Using JoeBro with IMAP and calendar data while understanding local storage, permissions, and model-provider processing.
+- [AI memory you can find, inspect and edit](https://joexk1.github.io/joebro-field-notes/private-ai-memory-ownership/): A practical look at JoeBro’s separate Mac and phone memory systems: where each lives, how relevant context is selected, and what remains under your control.
+- [Local AI means taking responsibility for your own data](https://joexk1.github.io/joebro-field-notes/local-ai-data-backup-portability/): Where JoeBro keeps workspace data, what portability does and does not mean, and why backups deserve care.
+- [Pairing JoeBro Mobile safely: QR codes, tokens, and revoking a phone](https://joexk1.github.io/joebro-field-notes/iphone-qr-pairing-token-security/): A guide to what the JoeBro iPhone pairing QR code does, where the token is kept, how to revoke access, and what the mobile agent cannot configure.
+- [Tailscale or home Wi-Fi for a private Mac-to-iPhone AI connection?](https://joexk1.github.io/joebro-field-notes/tailscale-versus-wifi-private-ai/): Compare JoeBro Mobile's documented Tailscale and Wi-Fi reachability options, including local-network permissions, token exposure, and the awake-host requirement.
+- [Building JoeBro Mobile yourself: iOS version, signing, and push requirements](https://joexk1.github.io/joebro-field-notes/iphone-source-build-signing/): What a source-only iPhone companion means in practice: iOS and Xcode needs, bundle identity, free Apple ID builds, and paid push notification setup.
+- [How JoeBro's heartbeat limits background model calls and notifications](https://joexk1.github.io/joebro-field-notes/heartbeat-background-model-costs/): Learn when JoeBro's phone heartbeat calls a model, which caps and quiet hours apply, and why the feature is off by default.
+- [Editing documents beside the conversation in JoeBro](https://joexk1.github.io/joebro-field-notes/private-ai-document-coediting/): How JoeBro pairs a local Mac document editor with agent assistance, and what changes when you choose a hosted model.
+- [From a question to a cited report: Deep Research in JoeBro](https://joexk1.github.io/joebro-field-notes/deep-research-cited-reports/): A look at JoeBro’s multi-source research workflow, its report tools, and the model and search privacy boundary.
+- [MCP tools in JoeBro: add only the capabilities you choose](https://joexk1.github.io/joebro-field-notes/mcp-tools-user-control/): How JoeBro connects user-added MCP servers and why local tool access is part of the privacy decision.
+- [My personal Raspberry Pi setup for JoeBro](https://joexk1.github.io/joebro-field-notes/self-hosted-ai-raspberry-pi/): A first-hand account of running JoeBro’s Python and SQLite backend headless on a Pi, with the limits clearly separated from its documented Mac install.
+- [A native Mac app with a small local Python backend](https://joexk1.github.io/joebro-field-notes/native-swiftui-local-python-workspace/): Why JoeBro combines a SwiftUI Mac interface with a bundled Python standard-library backend, and where the local design stops.
+
+## Source repositories
+- JoeBro for macOS: https://github.com/joexk1/JoeBro
+- JoeBro Mobile for iPhone: https://github.com/joexk1/JoeBro-Mobile
+
+## Product boundaries
+JoeBro stores workspace data locally on the Mac. Users choose a local or hosted model endpoint; hosted prompts go to that provider. Cloak Mode replaces detected sensitive values but does not make hosted inference local. The documented iPhone setup pairs to a Mac that must remain open and awake. The iPhone app is source-only; there is no App Store build. The creator’s Raspberry Pi configuration is personal; no supported Pi or Docker installation guide is documented.

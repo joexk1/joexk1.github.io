@@ -1,1 +1,61 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><title>JoeBro</title><meta http-equiv="refresh" content="0; url=/joebro/"><link rel="canonical" href="https://joexk1.github.io/joebro/"><meta name="robots" content="noindex"><script>location.replace("/joebro/"+location.hash)</script></head><body><p><a href="/joebro/">Continue to JoeBro</a></p></body></html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Joe Robinson</title>
+    <meta name="description" content="Joe Robinson: Cultural Studies at the University of Amsterdam, writer and builder. A desk you can play with: CV, essays, and the things I've made." />
+    <meta property="og:title" content="Joe Robinson" />
+    <meta property="og:description" content="A desk you can play with: CV, essays, and the things I've made." />
+    <meta name="theme-color" content="#070605" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23221a14'/><text x='32' y='45' font-family='Georgia,serif' font-size='36' text-anchor='middle' fill='%23f3e3c3'>J</text></svg>" />
+    <!--
+      3D models: Poly Haven (CC0): magnifying glass, potted plant, dark wood texture.
+      Sketchfab via Objaverse (CC BY 4.0): see /credits.txt for each model and author.
+      Tie, belt, pint, phone, calculator and nameplate modelled for this site.
+    -->
+    <link rel="preload" href="/fonts/special-elite.woff2" as="font" type="font/woff2" crossorigin />
+    <style>@font-face{font-family:Typewriter;src:url(/fonts/special-elite.woff2)format("woff2");font-display:block}</style>
+    <script type="module" crossorigin src="/assets/index-PXXHiK2K.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DjmDi-Au.css">
+  </head>
+  <body>
+    <canvas id="scene" aria-hidden="true"></canvas>
+    <div id="vignette" aria-hidden="true"></div>
+
+    <div id="loader" role="status" aria-label="Loading">
+      <div class="sheet">
+        <div class="loader-name" aria-label="Joe Robinson"></div>
+      </div>
+    </div>
+    <script>
+      // typed straight away, before the 3D scene has even started loading; the desk waits for the last key
+      window.nameTyped = new Promise((done) => {
+        const el = document.querySelector('.loader-name');
+        const type = () =>
+          [...'Joe Robinson'].forEach((ch, i) =>
+            setTimeout(() => {
+              const s = document.createElement('span');
+              s.textContent = ch;
+              s.className = 'struck';
+              el.appendChild(s);
+              if (i === 11) setTimeout(done, 500);
+            }, 200 + i * 105 + (i > 3 ? 60 : 0)),
+          );
+        document.fonts.load("1em 'Typewriter'").then(type, type);
+      });
+    </script>
+
+    <div id="hint" aria-live="polite"></div>
+    <div id="card" hidden></div>
+    <div id="phone-ui" hidden></div>
+    <div id="cv-ui" hidden></div>
+
+    <noscript>
+      <main class="fallback">
+        <h1>Joe Robinson</h1>
+        <p>Cultural Studies student at the University of Amsterdam (Honours Programme). This site is an interactive 3D desk and needs JavaScript. Email: joer05@protonmail.com</p>
+      </main>
+    </noscript>
+  </body>
+</html>

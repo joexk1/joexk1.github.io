@@ -1,0 +1,20 @@
+<svg width="76" height="60" viewBox="0 0 76 60" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Novitec">
+  <defs>
+    <linearGradient id="gL" x1="6" y1="8" x2="46" y2="52" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5BD673"/>
+      <stop offset="1" stop-color="#2E9A45"/>
+    </linearGradient>
+    <linearGradient id="gR" x1="30" y1="8" x2="70" y2="52" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#33933F"/>
+      <stop offset="1" stop-color="#15521F"/>
+    </linearGradient>
+  </defs>
+  <g stroke-linejoin="miter" fill="none" stroke-width="7.5">
+    <!-- Left diamond (bright) -->
+    <path d="M28 6 L50 30 L28 54 L6 30 Z" stroke="url(#gL)"/>
+    <!-- Right diamond (dark) drawn over the left -->
+    <path d="M48 6 L70 30 L48 54 L26 30 Z" stroke="url(#gR)"/>
+    <!-- Weave: redraw the left diamond's right limbs so it crosses back over -->
+    <path d="M28 6 L50 30 L28 54" stroke="url(#gL)"/>
+  </g>
+</svg>
